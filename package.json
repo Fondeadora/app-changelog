@@ -1,0 +1,13 @@
+{
+  "name": "app-changelog",
+  "version": "1.0.0",
+  "description": "Triggers the app changelog with the last tagged pull requests. 🚀",
+  "main": "index.js",
+  "author": "skdv 🤖",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@octokit/core": "^3.6.0",
+    "@slack/web-api": "^6.7.1"
+  }
+}
