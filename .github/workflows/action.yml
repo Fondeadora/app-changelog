@@ -1,0 +1,27 @@
+name: Automated changelog
+description: Automated Fondeadora mobile app changelog 🚀
+
+inputs: 
+  release_tag:
+    description: Release tag version
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up node
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14
+
+    - name: Install project dependencies
+      run: yarn install 
+      shell: bash
+    
+    - name: Run changelog automation
+      run: |
+        export RELEASE_TAG="${{ github.event.inputs.release_tag }}"
+        node index.js
+      shell: bash

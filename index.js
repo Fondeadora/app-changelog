@@ -1,7 +1,15 @@
 import { Octokit } from "@octokit/core"
 import { WebClient } from "@slack/web-api"
+import { config } from "dotenv"
 
-const octokit = new Octokit({ auth: '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' })
+config()
+
+const channel = process.env.CHANNEL
+const githubKey = process.env.GITHUB_KEY
+const slackToken = process.env.SLACK_TOKEN
+const releaseTag = process.env.RELEASE_TAG
+
+const octokit = new Octokit({ auth: githubKey })
 
 const response = await octokit.request("GET /repos/Fondeadora/FondeadoraApp/pulls", {
   state: 'close',
@@ -10,7 +18,7 @@ const response = await octokit.request("GET /repos/Fondeadora/FondeadoraApp/pull
 })
 
 const filteredPulls = response.data.filter((pulls) => {
-  return pulls.milestone != null && pulls.milestone.title == '3.6.0'
+  return pulls.milestone != null && pulls.milestone.title == releaseTag
 });
 
 const formattedPulls = filteredPulls.map((pull) => ({
@@ -83,11 +91,10 @@ const tasksBySquad = formattedPulls
 
 console.log(tasksBySquad)
 
-const web = new WebClient('xoxb-396961370405-2528139583093-r2gKXUDftUJQQz56bfYPbKK5');
+const web = new WebClient(slackToken);
 
-const conversationId = 'C02FEBYMJUW';
+const conversationId = channel;
 
-const responsePostMessage = await web.chat.postMessage({ channel: conversationId, text: `*CHANGELOG v3.6.0*\n\n\n${tasksBySquad.join('\n\n\n')}` });
+const responsePostMessage = await web.chat.postMessage({ channel: conversationId, text: `*CHANGELOG v${releaseTag}*\n\n\n${tasksBySquad.join('\n\n\n')}` });
 
 console.log(responsePostMessage)
-// 1651883852.743059

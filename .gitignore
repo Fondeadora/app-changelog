@@ -1,2 +1,8 @@
+# Dependencies
 /node_modules
+.env
+
+# Miscellaneous
 .DS_Store
+.vscode
+
