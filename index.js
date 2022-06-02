@@ -9,6 +9,8 @@ const githubKey = process.env.GITHUB_KEY
 const slackToken = process.env.SLACK_TOKEN
 const releaseTag = process.env.RELEASE_TAG
 
+console.log(githubKey)
+
 const octokit = new Octokit({ auth: githubKey })
 
 const response = await octokit.request("GET /repos/Fondeadora/FondeadoraApp/pulls", {

@@ -5,12 +5,19 @@ inputs:
   release_tag:
     description: Release tag version
     required: true
+  slack_channel:
+    description: App changelog slack channel
+    required: true
+  github_key:
+    description: Fondeadora app github key
+    required: true
+  slack_token:
+    description: Slack api token
+    required: true
 
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-
     - name: Set up node
       uses: actions/setup-node@v3
       with:
@@ -21,7 +28,10 @@ runs:
       shell: bash
     
     - name: Run changelog automation
-      run: |
-        export RELEASE_TAG="${{ github.event.inputs.release_tag }}"
-        node index.js
+      env: 
+        CHANNEL: ${{ github.event.inputs.slack_channel }}
+        GITHUB_KEY: ${{ github.event.inputs.github_key }}
+        RELEASE_TAG: ${{ github.event.inputs.release_tag }}
+        SLACK_TOKEN: ${{ github.event.inputs.slack_token }}
+      run: node index.js
       shell: bash
