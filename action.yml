@@ -21,11 +21,7 @@ runs:
     - name: Set up node
       uses: actions/setup-node@v3
       with:
-        node-version: 14
-
-    - name: Install project dependencies
-      run: yarn install 
-      shell: bash
+        node-version: 16
     
     - name: Run changelog automation
       env: 
@@ -33,5 +29,7 @@ runs:
         GITHUB_KEY: ${{ github.event.inputs.github_key }}
         RELEASE_TAG: ${{ github.event.inputs.release_tag }}
         SLACK_TOKEN: ${{ github.event.inputs.slack_token }}
-      run: node index.js
+      run: |
+        yarn install
+        node index.js
       shell: bash
