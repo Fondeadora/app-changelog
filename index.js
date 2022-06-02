@@ -1,15 +1,11 @@
 import { Octokit } from "@octokit/core"
 import { WebClient } from "@slack/web-api"
-import { config } from "dotenv"
+import * as core from '@actions/core'
 
-config()
-
-const channel = process.env.CHANNEL
-const githubKey = process.env.GITHUB_KEY
-const slackToken = process.env.SLACK_TOKEN
-const releaseTag = process.env.RELEASE_TAG
-
-console.log(githubKey)
+const channel = core.getInput('slack_channel')
+const githubKey = core.getInput('github_key')
+const slackToken = core.getInput('release_tag')
+const releaseTag = core.getInput('slack_token')
 
 const octokit = new Octokit({ auth: githubKey })
 

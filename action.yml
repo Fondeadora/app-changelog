@@ -16,20 +16,5 @@ inputs:
     required: true
 
 runs:
-  using: composite
-  steps:
-    - name: Set up node
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-    
-    - name: Run changelog automation
-      env: 
-        CHANNEL: ${{ github.event.inputs.slack_channel }}
-        GITHUB_KEY: ${{ github.event.inputs.github_key }}
-        RELEASE_TAG: ${{ github.event.inputs.release_tag }}
-        SLACK_TOKEN: ${{ github.event.inputs.slack_token }}
-      run: |
-        yarn install
-        node index.js
-      shell: bash
+  using: node16
+  main: index.js 
