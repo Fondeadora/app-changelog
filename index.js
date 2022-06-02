@@ -4,8 +4,8 @@ import * as core from '@actions/core'
 
 const channel = core.getInput('slack_channel')
 const githubKey = core.getInput('github_key')
-const slackToken = core.getInput('release_tag')
-const releaseTag = core.getInput('slack_token')
+const slackToken = core.getInput('slack_token')
+const releaseTag = core.getInput('release_tag')
 
 const octokit = new Octokit({ auth: githubKey })
 
