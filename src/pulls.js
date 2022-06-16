@@ -12,11 +12,15 @@ export const Pulls = class {
     #githubPulls = async () => {
         const octokit = new Octokit({ auth: this.#githubKey })
 
-        return await octokit.request("GET /repos/Fondeadora/FondeadoraApp/pulls", {
+        console.log('🔌 Loading pull requests from FondeadoraApp')
+
+        const response = await octokit.request("GET /repos/Fondeadora/FondeadoraApp/pulls", {
             state: 'close',
             per_page: '100',
             page: 1,
         })
+
+        return response
     }
 
     #formatTag = (tag) => {
@@ -26,7 +30,11 @@ export const Pulls = class {
     }
 
     #filteredPulls = async () => {
-        return (await this.#githubPulls()).data.filter((pulls) => {
+        const githubPulls =  await this.#githubPulls()
+
+        console.log('🧽 Cleaning pull requests')
+
+        return githubPulls.data.filter((pulls) => {
             return pulls.milestone != null && this.#formatTag(this.#releaseTag) === this.#formatTag(pulls.milestone.title)
         })
     }
@@ -39,7 +47,7 @@ export const Pulls = class {
         }))
     }
 
-    filteredPulls = async () => {
+    cleanedPulls = async () => {
         return (await this.#formattedPulls())
             .filter((pull) => pull.labels.includes('retencion') || pull.labels.includes('plataforma') || pull.labels.includes('adquisicion'))
             .filter((pull) => !pull.labels.includes('ignored'))

@@ -15,7 +15,11 @@ export const PostSlack = class {
     }
 
     #tasksBySquad = async () => {
-        return (await this.#pulls.filteredPulls()).map((pull) => new FormattedTask(pull).message())
+        const cleanedPulls = await this.#pulls.cleanedPulls()
+
+        console.log('⚙️ Building pull request message')
+        
+        return cleanedPulls.map((pull) => new FormattedTask(pull).message())
     }
 
     responsePostMessage = async () => {
