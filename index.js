@@ -1,98 +1,16 @@
-import { Octokit } from "@octokit/core"
-import { WebClient } from "@slack/web-api"
 import * as core from '@actions/core'
+import { config } from "dotenv"
 
-const channel = core.getInput('slack_channel')
-const githubKey = core.getInput('github_key')
-const slackToken = core.getInput('slack_token')
-const releaseTag = core.getInput('release_tag')
+import { Pulls } from "./src/pulls.js"
+import { PostSlack } from "./src/post-slack.js"
 
-const octokit = new Octokit({ auth: githubKey })
+config()
 
-const response = await octokit.request("GET /repos/Fondeadora/FondeadoraApp/pulls", {
-  state: 'close',
-  per_page: '100',
-  page: 1,
-})
+const channel = process.env.CHANNEL == null ? core.getInput('slack_channel') : process.env.CHANNEL
+const githubKey = process.env.GITHUB_KEY == null ? core.getInput('github_key') : process.env.GITHUB_KEY
+const slackToken = process.env.SLACK_TOKEN == null ? core.getInput('slack_token') : process.env.SLACK_TOKEN
+const releaseTag = process.env.RELEASE_TAG == null ? core.getInput('release_tag') : process.env.RELEASE_TAG
 
-const filteredPulls = response.data.filter((pulls) => {
-  return pulls.milestone != null && pulls.milestone.title == releaseTag
-});
+const postSlack = new PostSlack(new Pulls(githubKey, releaseTag), channel, slackToken, releaseTag)
 
-const formattedPulls = filteredPulls.map((pull) => ({
-  title: pull.title,
-  labels: pull.labels.map((label) => label.name)
-}))
-
-const squads = ['adquisicion', 'retencion', 'plataforma']
-
-const githubLabels = {
-  'design-system': 'design',
-  'design-bug': 'design',
-  'bug': 'fix',
-  'sentry': 'fix',
-  'documentation': 'maintenance',
-  'maintenance': 'maintenance',
-  'technical-debt': 'maintenance',
-  'security': 'maintenance',
-  'help-wanted': 'collaborative',
-  'pair-programming': 'collaborative',
-  'proposal': 'collaborative',
-  'android': 'native',
-  'ios': 'native',
-  'testing': 'testing',
-  'enhancement': 'enhancement',
-}
-
-const FormattedTask = class {
-  constructor(pull) {
-    this.squads = pull.labels.filter((label) => squads.includes(label))
-    this.title = pull.title
-    this.labels = pull.labels.filter((label) => !squads.includes(label))
-  }
-
-  get fondeadoraLabels() {
-    if (this.labels.length == 0) {
-      return this.githubLabels
-    }
-
-    const labels = this.labels.map((label) => {
-      if (githubLabels[label] == undefined) {
-        return label
-      }
-
-      return githubLabels[label]
-    })
-
-    return [...new Set(labels)]
-  }
-
-  get summary() {
-    return {
-      squads: this.squads,
-      title: this.title,
-      labels: this.fondeadoraLabels
-    }
-  }
-
-  get message() {
-    const labels = this.fondeadoraLabels.map((label) => `\`${label}\``)
-    const squads = this.squads.map((squad) => `\`${squad.toUpperCase()}\``)
-    return `${this.title}\ndeveloped by: ${squads.join(', ')}\n${labels.join(', ')}`
-  }
-}
-
-const tasksBySquad = formattedPulls
-  .filter((pull) => pull.labels.includes('retencion') || pull.labels.includes('plataforma') || pull.labels.includes('adquisicion'))
-  .filter((pull) => !pull.labels.includes('ignored'))
-  .map((pull) => new FormattedTask(pull).message)
-
-console.log(tasksBySquad)
-
-const web = new WebClient(slackToken);
-
-const conversationId = channel;
-
-const responsePostMessage = await web.chat.postMessage({ channel: conversationId, text: `*CHANGELOG v${releaseTag}*\n\n\n${tasksBySquad.join('\n\n\n')}` });
-
-console.log(responsePostMessage)
+console.log(await postSlack.responsePostMessage())
