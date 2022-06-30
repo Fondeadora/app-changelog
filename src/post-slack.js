@@ -15,17 +15,13 @@ export const PostSlack = class {
     }
 
     #tasksBySquad = async () => {
-        const cleanedPulls = await this.#pulls.cleanedPulls()
-
-        console.log('⚙️ Building pull request message')
-        
-        return cleanedPulls.map((pull) => new FormattedTask(pull).message())
+        return this.#pulls.map((pull) => new FormattedTask(pull).message())
     }
 
     responsePostMessage = async () => {
         return this.#web.chat.postMessage({
             channel: this.#channel,
-            text: `*CHANGELOG v${this.#releaseTag}*\n\n\n${(await this.#tasksBySquad()).join('\n\n\n')}`
+            text: `🛎 <!here>\n\n\n*CHANGELOG v${this.#releaseTag}*\n\n\n${(await this.#tasksBySquad()).join('\n\n\n')}`
         })
     }
 }

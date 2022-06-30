@@ -1,54 +1,42 @@
-import { Octokit } from "@octokit/core"
+
 
 export const Pulls = class {
-    #githubKey
-    #releaseTag
+    #octokit
 
-    constructor(githubKey, releaseTag) {
-        this.#githubKey = githubKey
-        this.#releaseTag = releaseTag
+    constructor(octokit) {
+        this.#octokit = octokit
     }
 
     #githubPulls = async () => {
-        const octokit = new Octokit({ auth: this.#githubKey })
-
-        console.log('🔌 Loading pull requests from FondeadoraApp')
-
-        const response = await octokit.request("GET /repos/Fondeadora/FondeadoraApp/pulls", {
+        return await this.#octokit.request("GET /repos/Fondeadora/FondeadoraApp/pulls", {
             state: 'close',
             per_page: '100',
             page: 1,
         })
-
-        return response
     }
 
-    #formatTag = (tag) => {
-        const splittedTag = tag.split('.')
-        splittedTag.pop()
-        return splittedTag.join('.')
-    }
+    #filteredPulls = async (commits) => {
+        const githubPulls = await this.#githubPulls()
+        
+        const filtered = []
 
-    #filteredPulls = async () => {
-        const githubPulls =  await this.#githubPulls()
-
-        console.log('🧽 Cleaning pull requests')
-
-        return githubPulls.data.filter((pulls) => {
-            return pulls.milestone != null && this.#formatTag(this.#releaseTag) === this.#formatTag(pulls.milestone.title)
+        githubPulls.data.forEach((pull) => {
+            if (commits.includes(pull.merge_commit_sha)) {
+                filtered.push({
+                    title: pull.title,
+                    labels: pull.labels.map((label) => label.name),
+                    tag: pull.milestone.title
+                })
+            }
         })
+
+        return filtered
     }
 
-    #formattedPulls = async () => {
-        return (await this.#filteredPulls()).map((pull) => ({
-            title: pull.title,
-            labels: pull.labels.map((label) => label.name),
-            tag: pull.milestone.title
-        }))
-    }
+    cleanedPulls = async (commits) => {
+        const filteredPulls = await this.#filteredPulls(commits)
 
-    cleanedPulls = async () => {
-        return (await this.#formattedPulls())
+        return filteredPulls
             .filter((pull) => pull.labels.includes('retencion') || pull.labels.includes('plataforma') || pull.labels.includes('adquisicion'))
             .filter((pull) => !pull.labels.includes('ignored'))
     }
