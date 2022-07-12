@@ -17,7 +17,7 @@ export const SHAVersion = class {
     filteredCommits = async () => {
         const sha = await this.#getSHAsFromTags()
         const compared = (await this.#getSHAsFromComparison(sha.base, sha.head)).data.commits
-            
+
         return compared.filter((commit) => /#[0-9]+/g.exec(commit.commit.message) != null).map((commit) => commit.sha)
     }
 }

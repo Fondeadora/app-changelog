@@ -13,7 +13,7 @@ const allowedCommits = await new SHAVersion(octokit).filteredCommits()
 
 console.log('🧽 Cleaning filtered pull request')
 
-const pulls = await new Pulls(octokit).cleanedPulls(allowedCommits)
+const pulls = await new Pulls(octokit, releaseTag).cleanedPulls(allowedCommits)
 
 console.log('⚙️ Building changelog with formatted task')
 
