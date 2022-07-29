@@ -23,8 +23,10 @@ export const Pulls = class {
         const filtered = []
 
         githubPulls.data.forEach((pull) => {
+
             if (commits.includes(pull.merge_commit_sha) && pull.milestone != null) {
                 filtered.push({
+                    sha: pull.merge_commit_sha,
                     title: pull.title,
                     labels: pull.labels.map((label) => label.name),
                     tag: pull.milestone.title,
@@ -33,6 +35,7 @@ export const Pulls = class {
 
             if (pull.milestone != null && pull.milestone.title == this.#releaseTag) {
                 filtered.push({
+                    sha: pull.merge_commit_sha,
                     title: pull.title,
                     labels: pull.labels.map((label) => label.name),
                     tag: pull.milestone.title,
@@ -40,7 +43,9 @@ export const Pulls = class {
             }
         })
 
-        return filtered.filter((f) => f.tag == this.#releaseTag)
+        const filteredWithTag = filtered.filter((f) => f.tag == this.#releaseTag)
+
+        return Array.from(new Set(filteredWithTag.map(JSON.stringify))).map(JSON.parse)
     }
 
     cleanedPulls = async (commits) => {

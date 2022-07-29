@@ -21,7 +21,7 @@ export const PostSlack = class {
     responsePostMessage = async () => {
         return this.#web.chat.postMessage({
             channel: this.#channel,
-            text: `🛎 <!here>\n\n\n*CHANGELOG v${this.#releaseTag}*\n\n\n${(await this.#tasksBySquad()).join('\n\n\n')}`
+            text: `🛎 <!here>\n\n\n*CHANGELOG v${this.#releaseTag}*\n\n\n${(await this.#tasksBySquad()).join('\n\n\n')}\n\n`
         })
     }
 }
