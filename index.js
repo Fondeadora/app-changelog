@@ -9,18 +9,20 @@ const { channel, octokit, slackToken, releaseTag } = environment()
 
 console.log('🥅 Filtering merged pull request from tag')
 
-const allowedCommits = await new SHAVersion(octokit).filteredCommits()
+// const allowedCommits = await new SHAVersion(octokit).filteredCommits()
 
-console.log('🧽 Cleaning filtered pull request')
+// console.log('🧽 Cleaning filtered pull request')
 
-const pulls = await new Pulls(octokit, releaseTag).cleanedPulls(allowedCommits)
+// const pulls = await new Pulls(octokit, releaseTag).githubPulls(allowedCommits)
 
-console.log('⚙️ Building changelog with formatted task')
+// console.log('⚙️ Building changelog with formatted task')
 
-const postSlack = new PostSlack(pulls, channel, slackToken, releaseTag)
+// const postSlack = new PostSlack(pulls, channel, slackToken, releaseTag)
 
-console.log('📦 Sending changelog to slack')
+// console.log('📦 Sending changelog to slack')
 
-const response = await postSlack.responsePostMessage()
+// console.log(await postSlack.responsePostMessage());
 
-console.log(`✅ Changelog delivered with timestamp ${response.ts}`)
+// const response = await postSlack.responsePostMessage()
+
+// console.log(`✅ Changelog delivered with timestamp ${response.ts}`)

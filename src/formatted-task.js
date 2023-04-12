@@ -1,9 +1,6 @@
 export const FormattedTask = class {
-    #squads
     #title
     #labels
-
-    #defaultSquads = ['adquisicion', 'retencion', 'plataforma']
 
     #githubLabels = {
         'design-system': 'design',
@@ -25,8 +22,7 @@ export const FormattedTask = class {
 
     constructor(pull) {
         this.#title = pull.title
-        this.#squads = pull.labels.filter((label) => this.#defaultSquads.includes(label))
-        this.#labels = pull.labels.filter((label) => !this.#defaultSquads.includes(label))
+        this.#labels = pull.labels
     }
 
     #fondeadoraLabels = () => {
@@ -47,7 +43,6 @@ export const FormattedTask = class {
 
     message = () => {
         const labels = this.#fondeadoraLabels().map((label) => `\`${label}\``)
-        const squads = this.#squads.map((squad) => `\`${squad.toUpperCase()}\``)
-        return `${this.#title}\ndeveloped by: ${squads.join(', ')}\n${labels.join(', ')}`
+        return `${this.#title}\n${labels.join(', ')}`
     }
 }
