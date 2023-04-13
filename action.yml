@@ -4,16 +4,14 @@ description: Automated Fondeadora mobile app changelog 🚀
 inputs: 
   release_tag:
     description: Release tag version
-    required: true
   slack_channel:
     description: App changelog slack channel
-    required: true
   github_key:
     description: Fondeadora app github key
-    required: true
+  graphql_schema:
+    description: GraphQL Schema
   slack_token:
     description: Slack api token
-    required: true
 
 runs:
   using: node16

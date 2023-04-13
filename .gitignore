@@ -1,5 +1,7 @@
 # Dependencies
 .env
+schema.gql
+repo/
 
 # Miscellaneous
 .DS_Store
