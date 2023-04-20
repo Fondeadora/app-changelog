@@ -13,15 +13,21 @@ const octokit = new Octokit({ auth: token })
 
 shell.mkdir('repo/')
 shell.cd('repo/')
-shell.exec(`git clone git@github.com:Fondeadora/f4b-mobile-app.git`)
-shell.cd('../')
+shell.exec('git clone git@github.com:Fondeadora/f4b-mobile-app.git')
 
-console.log('cloned')
+shell.exec('git clone git@github.com:Fondeadora/gql-generator.git')
+shell.cd('gql-generator/')
+shell.exec('make activate')
+
+shell.cd('../../')
 
 const path = 'repo/f4b-mobile-app/package/creators_graphql/lib/graphql/schema'
 fs.writeFileSync(`${path}/schema.graphql`, schema)
 
-shell.cd('repo/f4b-mobile-app/')
+shell.cd('repo/f4b-mobile-app/package/creators_graphql')
+shell.exec('make gql-gen')
+shell.cd('../../')
+
 shell.exec('git add .')
 shell.exec('git checkout -b chore/update-schema')
 shell.exec(`git commit -am 'chore: improving graphql schema updating'`)
