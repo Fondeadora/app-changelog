@@ -11,28 +11,36 @@ const schema = core.getInput('graphql_schema')
 
 const octokit = new Octokit({ auth: token })
 
+console.log('1️⃣ Creating repo directory')
 shell.mkdir('repo/')
 shell.cd('repo/')
-shell.exec('git clone git@github.com:Fondeadora/f4b-mobile-app.git')
 
+console.log('2️⃣ Cloning f4b-mobile-app and gql-generator')
+shell.exec('git clone git@github.com:Fondeadora/f4b-mobile-app.git')
 shell.exec('git clone git@github.com:Fondeadora/gql-generator.git')
+
+console.log('3️⃣ Activating GraphQL Generator')
 shell.cd('gql-generator/')
 shell.exec('make activate')
 
+console.log('4️⃣ Writing modified schema')
 shell.cd('../../')
 
 const path = 'repo/f4b-mobile-app/package/creators_graphql/lib/graphql/schema'
 fs.writeFileSync(`${path}/schema.graphql`, schema)
 
+console.log('5️⃣ Generating GraphQL Files')
 shell.cd('repo/f4b-mobile-app/package/creators_graphql')
 shell.exec('make gql-gen')
 shell.cd('../../')
 
+console.log('6️⃣ Committing new changes and push them')
 shell.exec('git add .')
 shell.exec('git checkout -b chore/update-schema')
 shell.exec(`git commit -am 'chore: improving graphql schema updating'`)
 shell.exec('git push origin chore/update-schema')
 
+console.log('7️⃣ Creating pull request')
 await octokit.request('POST /repos/{owner}/{repo}/pulls', {
   owner: 'Fondeadora',
   repo: 'f4b-mobile-app',
