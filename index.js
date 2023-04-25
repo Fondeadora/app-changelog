@@ -31,7 +31,7 @@ fs.writeFileSync(`${path}/schema.graphql`, schema)
 
 console.log('5️⃣ Generating GraphQL Files')
 shell.cd('repo/f4b-mobile-app/package/creators_graphql')
-shell.exec('make gql-gen')
+shell.exec('make gql-gen-action')
 shell.cd('../../')
 
 console.log('6️⃣ Committing new changes and push them')
