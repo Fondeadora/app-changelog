@@ -23,28 +23,34 @@ console.log('3️⃣ Cloning f4b-mobile-app and gql-generator')
 shell.exec('git clone git@github.com:Fondeadora/f4b-mobile-app.git')
 shell.exec('git clone git@github.com:Fondeadora/gql-generator.git')
 
-console.log('4️⃣ Activating GraphQL Generator')
-shell.cd('gql-generator/')
+console.log('4️⃣ Updating current repositories')
+shell.cd('f4b-mobile-app/')
+shell.exec('git pull -r')
+shell.cd('../gql-generator/')
+shell.exec('git pull -r')
+
+console.log('5️⃣ Activating GraphQL Generator')
 shell.exec('make activate')
 
-console.log('5️⃣ Writing modified schema')
+console.log('6️⃣ Writing modified schema')
 shell.cd('../../')
 
 const path = 'repo/f4b-mobile-app/package/creators_graphql/lib/graphql/schema'
 fs.writeFileSync(`${path}/schema.graphql`, schema)
 
-console.log('6️⃣ Generating GraphQL Files')
+console.log('7️⃣ Generating GraphQL Files')
 shell.cd('repo/f4b-mobile-app/package/creators_graphql')
 shell.exec('make gql-gen-action')
 shell.cd('../../')
 
-console.log('7️⃣ Committing new changes and push them')
+console.log('8️⃣ Committing new changes and push them')
+shell.exec('make pkg-get-action && make linters-action')
 shell.exec('git add .')
 shell.exec('git checkout -b chore/update-schema')
 shell.exec(`git commit -am 'chore: improving graphql schema updating'`)
 shell.exec('git push origin chore/update-schema')
 
-console.log('8️⃣ Creating pull request')
+console.log('9️⃣ Creating pull request')
 await octokit.request('POST /repos/{owner}/{repo}/pulls', {
   owner: 'Fondeadora',
   repo: 'f4b-mobile-app',
