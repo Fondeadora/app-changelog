@@ -22,6 +22,7 @@ shell.cd('repo/')
 console.log('3️⃣ Cloning f4b-mobile-app and gql-generator')
 shell.exec('git clone git@github.com:Fondeadora/f4b-mobile-app.git')
 shell.exec('git clone git@github.com:Fondeadora/gql-generator.git')
+shell.exec('git clone git@github.com:Fondeadora/app_components.git')
 
 console.log('4️⃣ Updating current repositories')
 shell.cd('f4b-mobile-app/')
