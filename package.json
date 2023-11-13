@@ -9,7 +9,7 @@
   "dependencies": {
     "@actions/core": "^1.9.1",
     "@octokit/core": "^3.6.0",
-    "@slack/web-api": "^6.7.1",
+    "@slack/web-api": "^6.9.1",
     "dotenv": "^16.0.1",
     "shelljs": "^0.8.5"
   }
