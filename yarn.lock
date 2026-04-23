@@ -2,18 +2,28 @@
 # yarn lockfile v1
 
 
-"@actions/core@^1.9.1":
-  version "1.10.0"
-  resolved "https://registry.npmjs.org/@actions/core/-/core-1.10.0.tgz"
+"@actions/core@^1.11.1":
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/@actions/core/-/core-1.11.1.tgz#ae683aac5112438021588030efb53b1adb86f172"
   dependencies:
+    "@actions/exec" "^1.1.1"
     "@actions/http-client" "^2.0.1"
-    uuid "^8.3.2"
+
+"@actions/exec@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@actions/exec/-/exec-1.1.1.tgz#2e43f28c54022537172819a7cf886c844221a611"
+  dependencies:
+    "@actions/io" "^1.0.1"
 
 "@actions/http-client@^2.0.1":
   version "2.0.1"
   resolved "https://registry.npmjs.org/@actions/http-client/-/http-client-2.0.1.tgz"
   dependencies:
     tunnel "^0.0.6"
+
+"@actions/io@^1.0.1":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@actions/io/-/io-1.1.3.tgz#4cdb6254da7962b07473ff5c335f3da485d94d71"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -516,10 +526,6 @@ tunnel@^0.0.6:
 universal-user-agent@^7.0.0, universal-user-agent@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/universal-user-agent/-/universal-user-agent-7.0.2.tgz#52e7d0e9b3dc4df06cc33cb2b9fd79041a54827e"
-
-uuid@^8.3.2:
-  version "8.3.2"
-  resolved "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
 
 which@^2.0.1:
   version "2.0.2"
